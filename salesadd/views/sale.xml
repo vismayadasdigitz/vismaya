@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.tips.and.tricks</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_mode"  invisible="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_preview_sale_order']" position="before">
+                <button name="test" string="Test" type="object" />
+            </xpath>
+
+             <xpath expr="//button[@name='action_draft']" position="after">
+                <button name="toggle_active" string="toggle_active" type="object" class="oe-highlight"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="attrs">{'invisible':1}</attribute>
+
+            </xpath>
+             <xpath expr="//field[@name='payment_mode']" position="after">
+                <field name="is_paid" />
+            </xpath>
+
+        </field>
+
+
+    </record>
+</odoo>

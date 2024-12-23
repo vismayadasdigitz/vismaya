@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="school_class_form_view" model="ir.ui.view">
+        <field name="name">school.student.form</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <form string="School Mngt" class="o_sale_order">
+                <header>
+                    <button name="draft" string="Draft" type="object" attrs="{'invisible':[('state','in',['draft','draft'])]}"/>
+                    <field name="state" widget="statusbar"/>
+                    <button name="done" string="Done" type="object" attrs="{'invisible':['|',('state','in',['done','done']),('state','in',['success','success'])]}"/>
+                    <button name="success" string="Success" type="object" attrs="{'invisible':[('state','in',['success'])]}"/>
+
+                </header>
+                <sheet>
+
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
+
+                            <field name="age"/>
+                            <field name="image_1920" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="teacher"/>
+                            <field name="teachers" widget="many2many_tags"/>
+                            <field name="payment_status"/>
+
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="school_details" name="school_details">
+                            <field name="parents_ids" editable="bottom">
+                                <tree string="Student_details" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="parents_name"/>
+                                        <field name="address"/>
+                                        <field name="phone_number"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+
+     <record id="school_class_search" model="ir.ui.view">
+        <field name="name">school.student.search</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+                <search string="student">
+                    <field name="state"/>
+                    <filter name="filter_draft" string="draft" domain="[('state','=','draft')]"/>
+                    <filter name="filter_done" string="done" domain="[('state','=','done')]"/>
+                    <filter name="filter_success" string="success" domain="[('state','=','success')]"/>
+                    <filter string="state" name="state" context="{'group_by':'state'}"/>
+                </search>
+        </field>
+    </record>
+
+     <record id="school_class_tree" model="ir.ui.view">
+        <field name="name">school.student.tree</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+                <tree string="Student">
+                        <field name="name"/>
+                        <field name="age"/>
+                        <field name="teacher"/>
+                        <field name="teachers" widget="many2many_tags"/>
+                        <field name="state" decoration-success="state =='success'" decoration-danger="state =='draft'" decoration-warning="state =='done'" widget="badge"/>
+                </tree>
+        </field>
+    </record>
+
+
+     <record id="school_class_kanban" model="ir.ui.view">
+        <field name="name">school.student.kanban</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="teacher"/>
+                <field name="state"/>
+                <field name="image_1920"/>
+                <field name="id"/>
+                <field name="color"/>
+
+                <template >
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card" t-att-style="record.state.value === 'draft' ? 'border: 2px solid red;' : record.state.value === 'done' ? 'border: 2px solid yellow;':record.state.value === 'success' ? 'border: 2px solid green;':'' " widget="web_ribbon">
+                            <widget name="web_ribbon" text="Demo-Text" bg_color="bg-warning"/>
+                            <div class="o_kanban_image me-1">
+                                <img t-att-src="kanban_image('school.student', 'image_1920', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
+                            </div>
+
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    Name
+                                    <field name="name"/>
+                                </strong>
+                                <br/>
+                                <strong class="o_kanban_record_title">
+                                    age
+                                    <field name="age"/>
+                                </strong>
+                                <br/>
+                                <strong class="o_kanban_record_title">
+                                    teacher
+                                    <field name="teacher"/>
+                                </strong>
+                                <br/>
+                                <strong class="o_kanban_record_title">
+                                    state
+                                    <field name="state"/>
+                                </strong>
+                            </div>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
+
+        </field>
+     </record>
+
+
+
+    <record id="action_student" model="ir.actions.act_window">
+        <field name="name">School management</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.student</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+
+
+     <record id="school_teacher_form_view" model="ir.ui.view">
+        <field name="name">school.teacher.form</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="teacher">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="age"/>
+                    </group>
+                    <notebook>
+                        <page string="fee_details" name="fee_details">
+                            <field name="teacher_ids">
+                                <tree string="fee_details" editable="bottom">
+                                    <field name="fee"/>
+                                    <field name="month"/>
+                                    <field name="total_fee"/>
+                                    <field name="teacher"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_teacher" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <record id="school_student_details_form_view" model="ir.ui.view">
+        <field name="name">school.student_details.form</field>
+        <field name="model">student.details</field>
+        <field name="arch" type="xml">
+            <form string="student_details">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="parents_name"/>
+                        <field name="address"/>
+                        <field name="phone_number"/>
+                        <field name="teacher"/>
+
+
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_student_details" model="ir.actions.act_window">
+        <field name="name">Student_details</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">student.details</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+    <record id="school_fee_details_form_view" model="ir.ui.view">
+        <field name="name">school.fee_details.form</field>
+        <field name="model">fee.details</field>
+        <field name="arch" type="xml">
+            <form string="fee_details">
+                <sheet>
+                    <group>
+                        <field name="fee"/>
+                        <field name="month"/>
+                        <field name="total_fee"/>
+                        <field name="teacher"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+
+    <menuitem
+            id="school_management"
+            name="School Management"
+            action="action_student"
+            sequence="3"/>
+    <menuitem
+            id="school_teacher"
+            name="teacher management"
+            parent="school_management"
+            action="action_teacher"
+            sequence="0"/>
+    <menuitem
+            id="school_student_details"
+            name="student management"
+            parent="school_management"
+            action="action_student_details"
+            sequence="1"/>
+</odoo>
